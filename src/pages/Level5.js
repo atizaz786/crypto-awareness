@@ -7,30 +7,37 @@ function Level5() {
   const [bobMixedColor, setBobMixedColor] = useState(null);
   const [sharedColor, setSharedColor] = useState(null);
 
+  const primaryColors = {
+    red: '#FF0000',
+    blue: '#0000FF',
+    yellow: '#FFFF00',
+   
+  };
+
   const vibrantColors = {
     purple: '#8B00FF',
     green: '#00FF00',
     orange: '#FFA500',
-    pink: '#FF1493'
+    pink: '#FF1493',
   };
 
   const handleAlicePrivateColor = () => {
-    const privateColor = getRandomColor();
+    const privateColor = mixColors(primaryColors.red, primaryColors.blue); // Mix red and blue
     setAlicePrivateColor(privateColor);
   };
 
   const handleBobPrivateColor = () => {
-    const privateColor = getRandomColor();
+    const privateColor = mixColors(primaryColors.blue, primaryColors.yellow); // Mix blue and yellow
     setBobPrivateColor(privateColor);
   };
 
   const handleColorExchange = () => {
-    setAliceMixedColor(bobPrivateColor);
-    setBobMixedColor(alicePrivateColor);
+    setAliceMixedColor(bobPrivateColor); // Alice receives Bob's mixed color
+    setBobMixedColor(alicePrivateColor); // Bob receives Alice's mixed color
   };
 
   const handleSharedColor = () => {
-    const sharedColor = mixColors(aliceMixedColor, alicePrivateColor);
+    const sharedColor = mixColors(aliceMixedColor, alicePrivateColor); // Alice combines mixed color with her private color
     setSharedColor(sharedColor);
   };
 
@@ -41,16 +48,13 @@ function Level5() {
   };
 
   const mixColors = (color1, color2) => {
-    // Mixing colors logic
-    // Replace with your own color mixing algorithm
-    // Here's an example of a simple mixing algorithm
-    const color1Rgb = hexToRgb(color1);
-    const color2Rgb = hexToRgb(color2);
+    const rgb1 = hexToRgb(color1);
+    const rgb2 = hexToRgb(color2);
 
     const mixedColor = {
-      r: (color1Rgb.r + color2Rgb.r) / 2,
-      g: (color1Rgb.g + color2Rgb.g) / 2,
-      b: (color1Rgb.b + color2Rgb.b) / 2
+      r: Math.floor((rgb1.r + rgb2.r) / 2),
+      g: Math.floor((rgb1.g + rgb2.g) / 2),
+      b: Math.floor((rgb1.b + rgb2.b) / 2),
     };
 
     return rgbToHex(mixedColor.r, mixedColor.g, mixedColor.b);
@@ -63,11 +67,13 @@ function Level5() {
     });
 
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-      r: parseInt(result[1], 16),
-      g: parseInt(result[2], 16),
-      b: parseInt(result[3], 16)
-    } : null;
+    return result
+      ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        }
+      : null;
   };
 
   const rgbToHex = (r, g, b) => {
@@ -82,7 +88,7 @@ function Level5() {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-4xl font-bold mb-4">
-        Level 5 - Diffie-Hellman Key Exchange: Mixing Colors Example
+        Level 5 - Diffie-Hellman Key Exchange : Mixing Colors Example
       </h1>
 
       <div className="mb-4">
@@ -97,7 +103,7 @@ function Level5() {
           </div>
         ) : (
           <button
-            className="bg-purple-500 text-white px-4 py-2 rounded"
+            className="bg-red-500 text-white px-4 py-2 rounded"
             onClick={handleAlicePrivateColor}
           >
             Generate Alice's Private Color
@@ -126,7 +132,7 @@ function Level5() {
           </div>
         ) : (
           <button
-            className="bg-green-500 text-white px-4 py-2 rounded"
+            className="bg-blue-500 text-white px-4 py-2 rounded"
             onClick={handleBobPrivateColor}
           >
             Generate Bob's Private Color
@@ -144,7 +150,7 @@ function Level5() {
       </div>
 
       <button
-        className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+        className="bg-green-500 text-white px-4 py-2 rounded mt-4"
         onClick={handleColorExchange}
         disabled={!alicePrivateColor || !bobPrivateColor}
       >
@@ -155,7 +161,7 @@ function Level5() {
         <div className="mt-4">
           <h2 className="text-2xl font-bold mb-2">Shared Color</h2>
           <button
-            className="bg-pink-500 text-white px-4 py-2 rounded"
+            className="bg-purple-500 text-white px-4 py-2 rounded"
             onClick={handleSharedColor}
             disabled={!aliceMixedColor || !alicePrivateColor}
           >
@@ -167,7 +173,7 @@ function Level5() {
                 className="w-12 h-12 rounded-full mr-4"
                 style={{ backgroundColor: sharedColor }}
               ></div>
-              <p>Shared Color: {sharedColor}</p>
+              <p>Shared Color: {sharedColor.toUpperCase()}</p>
             </div>
           )}
         </div>
@@ -176,27 +182,32 @@ function Level5() {
       <div className="p-4 border rounded-md shadow-md mb-4 mt-4">
         <h2 className="text-2xl font-bold mb-2">How It Works</h2>
         <p>
-          In this example, Alice and Bob each choose a private color by mixing their primary colors. The primary colors
-          are represented by visually appealing vibrant colors. Alice selects a vibrant color, and Bob selects another
-          vibrant color. They keep their private colors secret.
+          In this example, Alice and Bob each choose a private color by mixing
+          their primary colors. The primary colors are represented by actual
+          color values. Alice combines the red and blue colors, while Bob
+          combines the blue and yellow colors. They keep their private colors
+          secret.
         </p>
         <br />
         <p>
-          Next, Alice and Bob exchange their mixed colors. Alice receives Bob's mixed color, and Bob receives Alice's
-          mixed color. They do this over an insecure channel, where others can observe the mixed colors but cannot
-          determine the original private colors.
+          Next, Alice and Bob exchange their mixed colors. Alice receives Bob's
+          mixed color, and Bob receives Alice's mixed color. They do this over
+          an insecure channel, where others can observe the mixed colors but
+          cannot determine the original primary colors.
         </p>
         <br />
         <p>
-          After the color exchange, Alice combines her private color with Bob's mixed color, and Bob combines his private
-          color with Alice's mixed color. The resulting color represents the shared secret key that can be used for
-          further communication.
+          After the color exchange, Alice combines her private color with Bob's
+          mixed color, and Bob combines his private color with Alice's mixed
+          color. The resulting color represents the shared secret key that can
+          be used for further communication.
         </p>
         <br />
         <p>
-          By visualizing the mixing colors analogy, we can understand the concept of the Diffie-Hellman key exchange,
-          where two parties can securely establish a shared secret key without directly transmitting it over an insecure
-          communication channel.
+          By visualizing the mixing colors analogy, we can understand the
+          concept of the Diffie-Hellman key exchange, where two parties can
+          securely establish a shared secret key without directly transmitting
+          it over an insecure communication channel.
         </p>
       </div>
     </div>
@@ -204,3 +215,4 @@ function Level5() {
 }
 
 export default Level5;
+
