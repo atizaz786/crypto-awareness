@@ -20,6 +20,7 @@ function Level1() {
     if (key >= 1 && key <= 25) {
       // Perform key generation logic
       console.log("Generated key:", key);
+      navigate("/level2", { state: { key: key } });
     } else {
       setErrorMessage("Please enter a valid number between 1 and 25");
     }
